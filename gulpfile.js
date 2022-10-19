@@ -8,6 +8,7 @@ const autoprefixer = require('gulp-autoprefixer');
 const imagemin = require('gulp-imagemin');
 const del = require('del');
 
+
 const serv = (cb) => {
     browserSync.init({
         server: {
@@ -19,8 +20,11 @@ const serv = (cb) => {
     cb()
 };
 
+
+
+
 const styles = (cb) => {
-    src("./src/styles/main.scss")
+    src("./src/styles/styles.scss")
         .pipe(sass().on("error", sass.logError))
         .pipe(cleanCSS())
         .pipe(
@@ -35,21 +39,17 @@ const styles = (cb) => {
 };
 
 const scripts = (cb) => {
-    src("./src/js/app.js")
+    src("./src/js/scripts.js")
         .pipe(minify())
         .pipe(dest("./dist/js"))
         .pipe(browserSync.stream());
     cb();
 };
 
+
+
 const cleanDist = (cb) => {
     del.sync(['./dist']);
-    cb();
-}
-
-const img = (cb) => {
-    src('./src/img/**/*.{jpg,jpeg,png,svg}')
-        .pipe(dest('./dist/img/'));
     cb();
 }
 
@@ -69,14 +69,23 @@ const imageMin = (cb) => {
     cb();
 }
 
+const images = (cb) => {
+    src('./src/images/**/*.{jpg,jpeg,png,svg}')
+        .pipe(dest('./dist/images'));
+    cb();
+}
+
 const watcher = (cb) => {
     watch("*.html").on("change", browserSync.reload);
     watch("./src/js/*.js").on("change", series(scripts, browserSync.reload));
     watch("./src/styles/**/*.scss", styles);
-    watch("./src/img/**/*.{jpg,jpeg,png,svg}").on("change", series(img, browserSync.reload));
+    watch("./src/images/**/*.{jpg,jpeg,png,svg}").on("change", series(images, browserSync.reload));
     cb();
 };
 
-exports.dev = parallel(serv, watcher, series(styles, scripts, img));
+
+
+
+exports.dev = parallel(serv, watcher, series(styles, scripts,images));
 exports.build = series(cleanDist,styles,scripts,imageMin);
 exports.clean = cleanDist;

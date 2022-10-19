@@ -1,11 +1,5 @@
-@mixin content-order {
-  display: flex;
-  list-style-type: none;
-}
-@mixin section-title {
-  font-size: 16px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: rgba(78, 78, 78, 1);
-  padding-bottom: 24px;
+@mixin font-options($weight, $size, $height){
+  font-weight: $weight;
+  font-size: #{$size}px;
+  line-height: calc(#{$height} / #{$size} * 100%);
 }
